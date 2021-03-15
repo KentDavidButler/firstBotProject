@@ -1,4 +1,6 @@
+# bot.py
 import os
+import csv
 import random
 
 from discord.ext import commands
@@ -7,28 +9,101 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='!', case_insensitive=True)
+wish_file = os.path.join(os.environ['USERPROFILE'], "Documents", "wishes.csv")
 
-@bot.command(name='99', help='Responds with a random quote from Brooklyn 99')
-async def nine_nine(ctx):
-    brooklyn_99_quotes = [
-        'I\'m the human form of the 💯 emoji.',
-        'Bingpot!',
-        (
-            'Cool. Cool cool cool cool cool cool cool, '
-            'no doubt no doubt no doubt no doubt.'
-        ),
-    ]
+@bot.event
+async def on_ready():
+    print("Everything's all ready to go~")
 
-    response = random.choice(brooklyn_99_quotes)
-    await ctx.send(response)
+@bot.command(name='AddToWishList')
+async def AddToWishList(ctx, *args):
+    '''
+    :: Adds an string of text to the wish list.
+    '''
+    wish = ' '.join(args)
 
-@bot.command(name='roll_dice', help='Simulates rolling dice.')
-async def roll(ctx, number_of_dice: int, number_of_sides: int):
-    dice = [
-        str(random.choice(range(1, number_of_sides + 1)))
-        for _ in range(number_of_dice)
-    ]
-    await ctx.send(', '.join(dice))
+    success = append_list_as_row(wish_file,("Wish::"+wish))
+    if (success==0):
+        await ctx.send(f"The following was added to wish list: {wish}")
+    else:
+        await ctx.send(f"An Error occured adding to wish list")
+
+
+@bot.command(name='ShowWishList')
+async def ShowWishList(ctx):
+    '''
+    :: View items in the wish list
+    '''
+    wish_list = return_csv_as_list(wish_file)
+    for wishes in wish_list:
+        await ctx.channel.send(wishes)
+
+    await ctx.send(f"End of list")
+
+
+@bot.command(name='ping')
+async def ping(ctx):
+    '''
+    :: checks the ping of the bot.
+    '''
+
+    # Get the latency of the bot
+    latency = bot.latency  # Included in the Discord.py library
+    # Send it to the user
+    await ctx.send(latency)
+
+
+@bot.command(name='echo')
+async def echo(ctx, *args):
+    '''
+    :: repeats any said after !echo.
+    '''
+    response = ""
+    for arg in args:
+        response = response + " " + arg
+
+    await ctx.channel.send(response)
+
+
+def append_list_as_row(file_name, list_of_elem):
+    try:
+        # Open file in append mode
+        with open(file_name, 'a+', newline='') as write_obj:
+            # Create a writer object from csv module
+            csv_writer = csv.writer(write_obj, delimiter=',')
+            # Add contents of list as last row in the csv file
+            csv_writer.writerow([list_of_elem])
+
+        write_obj.close()
+        return 0
+    except:
+        #unknown error handled
+        return 1
+
+
+def return_csv_as_list(file_name):
+    # Open file in read
+    wish_list = []
+    line_count = 0
+    with open(file_name, 'r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for row in csv_reader:
+            if line_count == 0:
+                wish_list.append(f'Here is the list of {", ".join(row)}')
+                line_count += 1
+            wish_list.append(f'\t{row["WISHES"]}')
+    csv_file.close()
+    return wish_list
+
+@AddToWishList.error
+async def AddToWishList_error(ctx, error):
+    if isinstance(error, commands.BadArgument):
+        await ctx.send('A Bad Argument error has occured')
+    elif isinstance(error, commands.CommandInvokeError):
+        await ctx.send('A Command Invoke Error occured')
+    else:
+        await ctx.send('Something really wrong occured')
 
 bot.run(TOKEN)
+
