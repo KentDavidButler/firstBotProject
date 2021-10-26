@@ -76,7 +76,7 @@ async def ShowIPAddresses(ctx):
 
         await ctx.channel.send(f"End of list")
     else:
-        await ctx.channel.send('Cannot use command here')
+        await ctx.channel.send(f'Cannot use command here: Channel ID{channel} and {seceretChannel}')
 
 @bot.command(name='ping')
 async def ping(ctx):
