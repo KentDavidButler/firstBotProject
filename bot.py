@@ -130,12 +130,11 @@ def return_csv_as_list(file_name):
     output_list = []
     line_count = 0
     with open(file_name, 'r') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
+        csv_reader = csv.reader(csv_file)
+        output_list.append(next(csv_reader))
+
         for row in csv_reader:
-            if line_count == 0:
-                output_list.append(f'Here is the list of {", ".join(row)}')
-                line_count += 1
-            output_list.append(f'\t{row[0]}')
+            output_list.append(f'\t{row}')
     csv_file.close()
     return output_list
 
