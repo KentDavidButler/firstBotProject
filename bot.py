@@ -40,9 +40,9 @@ async def ShowWishList(ctx):
     '''
     wish_list = return_csv_as_list(wish_file)
     for wishes in wish_list:
-        await channel.send(wishes)
+        await ctx.channel.send(wishes)
 
-    await channel.send(f"End of list")
+    await ctx.channel.send(f"End of list")
 
 @bot.command(name='AddIPAddress')
 async def AddIPAddress(ctx, *args):
@@ -60,7 +60,7 @@ async def AddIPAddress(ctx, *args):
         else:
             await ctx.channel.send(f"An Error occured adding to IP Address list")
     else:
-        await channel.send('Cannot use command here, ' + message.author)
+        await ctx.channel.send('Cannot use command here, ' + message.author)
 
 @bot.command(name='ShowIPAddresses')
 async def ShowIPAddresses(ctx):
@@ -72,11 +72,11 @@ async def ShowIPAddresses(ctx):
     if channel == seceretChannel:
         ip_addresses = return_csv_as_list(ip_file)
         for ipaddress in ip_addresses:
-            await channel.send(ipaddress)
+            await ctx.channel.send(ipaddress)
 
-        await channel.send(f"End of list")
+        await ctx.channel.send(f"End of list")
     else:
-        await channel.send('Cannot use command here, ' + message.author)
+        await ctx.channel.send('Cannot use command here, ' + message.author)
 
 @bot.command(name='ping')
 async def ping(ctx):
