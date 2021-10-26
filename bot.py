@@ -67,7 +67,8 @@ async def ShowIPAddresses(ctx):
     '''
     :: View items in the wish list
     '''
-
+    channel = client.get_channel(channel_id)
+    
     if channel == seceretChannel:
         ip_addresses = return_csv_as_list(ip_file)
         for ipaddress in ip_addresses:
