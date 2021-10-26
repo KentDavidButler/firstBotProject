@@ -67,6 +67,8 @@ async def ShowIPAddresses(ctx):
     '''
     :: View items in the wish list
     '''
+    channel = bot.get_channel(bot_spam_channel_ID)
+
     if channel == seceretChannel:
         ip_addresses = return_csv_as_list(ip_file)
         for ipaddress in ip_addresses:
