@@ -55,9 +55,11 @@ async def AddIPAddress(ctx, *args):
     ipAddress = ' '.join(args)
 
     if channel == int(seceretChannel):
-        success = append_list_as_row(ip_file,(ipAddress))
         try:
+            # check if the IP address is valid
             socket.inet_aton(ipAddress)
+
+            success = append_list_as_row(ip_file, (ipAddress))
             if (success==0):
                 await ctx.channel.send(f"The following was added to IP Address list: {ipAddress}")
             else:
@@ -125,17 +127,17 @@ def append_list_as_row(file_name, list_of_elem):
 
 def return_csv_as_list(file_name):
     # Open file in read
-    wish_list = []
+    output_list = []
     line_count = 0
     with open(file_name, 'r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         for row in csv_reader:
             if line_count == 0:
-                wish_list.append(f'Here is the list of {", ".join(row)}')
+                output_list.append(f'Here is the list of {", ".join(row)}')
                 line_count += 1
-            # wish_list.append(f'\t{row["WISHES"]}')
+             output_list.append(f'\t{row[0]}')
     csv_file.close()
-    return wish_list
+    return output_list
 
 @AddToWishList.error
 async def AddToWishList_error(ctx, error):
