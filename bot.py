@@ -25,7 +25,6 @@ async def AddToWishList(ctx, *args):
     '''
     :: Adds an string of text to the wish list.
     '''
-    channel = bot.get_channel(bot_spam_channel_ID)
     wish = ' '.join(args)
 
     success = append_list_as_row(wish_file,("Wish::"+wish))
@@ -50,7 +49,8 @@ async def AddIPAddress(ctx, *args):
     '''
     :: Adds an string of text to the ipaddress file.
     '''
-    channel = bot.get_channel(bot_spam_channel_ID)
+    //channel = bot.get_channel(bot_spam_channel_ID)
+    channel = client.get_channel(channel_id)
     ipAddress = ' '.join(args)
 
     if channel == seceretChannel:
@@ -67,7 +67,7 @@ async def ShowIPAddresses(ctx):
     '''
     :: View items in the wish list
     '''
-    channel = bot.get_channel(bot_spam_channel_ID)
+    channel = client.get_channel(channel_id)
 
     if channel == seceretChannel:
         ip_addresses = return_csv_as_list(ip_file)
