@@ -3,14 +3,18 @@ import os
 import csv
 import random
 
+import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
+client = discord.Client()
 TOKEN = os.getenv('DISCORD_TOKEN')
+seceretChannel = os.getenv('SECERET_CHANNEL')
 
 bot = commands.Bot(command_prefix='!', case_insensitive=True)
 wish_file = os.path.join(os.environ['USERPROFILE'], "Documents", "wishes.csv")
+ip_file = os.path.join(os.environ['USERPROFILE'], "Documents", "ipaddresses.csv")
 
 @bot.event
 async def on_ready():
@@ -21,14 +25,14 @@ async def AddToWishList(ctx, *args):
     '''
     :: Adds an string of text to the wish list.
     '''
+    channel = bot.get_channel(bot_spam_channel_ID)
     wish = ' '.join(args)
 
     success = append_list_as_row(wish_file,("Wish::"+wish))
     if (success==0):
-        await ctx.send(f"The following was added to wish list: {wish}")
+        await ctx.channel.send(f"The following was added to wish list: {wish}")
     else:
-        await ctx.send(f"An Error occured adding to wish list")
-
+        await ctx.channel.send(f"An Error occured adding to wish list")
 
 @bot.command(name='ShowWishList')
 async def ShowWishList(ctx):
@@ -37,10 +41,40 @@ async def ShowWishList(ctx):
     '''
     wish_list = return_csv_as_list(wish_file)
     for wishes in wish_list:
-        await ctx.channel.send(wishes)
+        await channel.send(wishes)
 
-    await ctx.send(f"End of list")
+    await channel.send(f"End of list")
 
+@bot.command(name='AddIPAddress')
+async def AddIPAddress(ctx, *args):
+    '''
+    :: Adds an string of text to the ipaddress file.
+    '''
+    channel = bot.get_channel(bot_spam_channel_ID)
+    ipAddress = ' '.join(args)
+
+    if channel == seceretChannel:
+        success = append_list_as_row(ip_file,(ipAddress))
+        if (success==0):
+            await ctx.channel.send(f"The following was added to IP Address list: {ipAddress}")
+        else:
+            await ctx.channel.send(f"An Error occured adding to IP Address list")
+    else:
+        await channel.send('Cannot use command here, ' + message.author)
+
+@bot.command(name='ShowIPAddresses')
+async def ShowIPAddresses(ctx):
+    '''
+    :: View items in the wish list
+    '''
+    if channel == seceretChannel:
+        ip_addresses = return_csv_as_list(ip_file)
+        for ipaddress in ip_addresses:
+            await channel.send(ipaddress)
+
+        await channel.send(f"End of list")
+    else:
+        await channel.send('Cannot use command here, ' + message.author)
 
 @bot.command(name='ping')
 async def ping(ctx):
@@ -51,7 +85,7 @@ async def ping(ctx):
     # Get the latency of the bot
     latency = bot.latency  # Included in the Discord.py library
     # Send it to the user
-    await ctx.send(latency)
+    await ctx.channel.send(latency)
 
 
 @bot.command(name='echo')
@@ -106,4 +140,3 @@ async def AddToWishList_error(ctx, error):
         await ctx.send('Something really wrong occured')
 
 bot.run(TOKEN)
-
