@@ -49,7 +49,7 @@ async def AddIPAddress(ctx, *args):
     '''
     :: Adds an string of text to the ipaddress file.
     '''
-    //channel = bot.get_channel(bot_spam_channel_ID)
+
     channel = client.get_channel(channel_id)
     ipAddress = ' '.join(args)
 
