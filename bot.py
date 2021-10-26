@@ -133,7 +133,7 @@ def return_csv_as_list(file_name):
             if line_count == 0:
                 wish_list.append(f'Here is the list of {", ".join(row)}')
                 line_count += 1
-            wish_list.append(f'\t{row["WISHES"]}')
+            # wish_list.append(f'\t{row["WISHES"]}')
     csv_file.close()
     return wish_list
 
