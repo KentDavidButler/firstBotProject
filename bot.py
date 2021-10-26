@@ -2,6 +2,7 @@
 import os
 import csv
 import random
+import socket
 
 import discord
 from discord.ext import commands
@@ -47,7 +48,7 @@ async def ShowWishList(ctx):
 @bot.command(name='AddIPAddress')
 async def AddIPAddress(ctx, *args):
     '''
-    :: Adds an string of text to the ipaddress file.
+    :: Only allows valid IPv4 Addresses to join the Server
     '''
 
     channel = ctx.channel.id
@@ -55,24 +56,28 @@ async def AddIPAddress(ctx, *args):
 
     if channel == int(seceretChannel):
         success = append_list_as_row(ip_file,(ipAddress))
-        if (success==0):
-            await ctx.channel.send(f"The following was added to IP Address list: {ipAddress}")
-        else:
-            await ctx.channel.send(f"An Error occured adding to IP Address list")
+        try:
+            socket.inet_aton(ipAddress)
+            if (success==0):
+                await ctx.channel.send(f"The following was added to IP Address list: {ipAddress}")
+            else:
+                await ctx.channel.send(f"An Error occured adding to IP Address list")
+        except:
+            await ctx.channel.send('Invalid IP Address try using https://whatismyipaddress.com')
     else:
         await ctx.channel.send('Cannot use command here')
 
 @bot.command(name='ShowIPAddresses')
 async def ShowIPAddresses(ctx):
     '''
-    :: View items in the wish list
+    :: View list of added IP Addresses
     '''
     channel = ctx.channel.id
 
     if channel == int(seceretChannel):
         ip_addresses = return_csv_as_list(ip_file)
-        for ipaddress in ip_addresses:
-            await ctx.channel.send(ipaddress)
+        for items in ip_addresses:
+            await ctx.channel.send(items)
 
         await ctx.channel.send(f"End of list")
     else:
