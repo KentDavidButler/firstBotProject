@@ -69,7 +69,7 @@ async def ShowIPAddresses(ctx):
     '''
     channel = ctx.channel.id
 
-    if channel == str(seceretChannel):
+    if channel == int(seceretChannel):
         ip_addresses = return_csv_as_list(ip_file)
         for ipaddress in ip_addresses:
             await ctx.channel.send(ipaddress)
@@ -77,6 +77,7 @@ async def ShowIPAddresses(ctx):
         await ctx.channel.send(f"End of list")
     else:
         await ctx.channel.send(f'Cannot use command here: Channel ID{type(channel)} and {type(seceretChannel)}')
+        await ctx.channel.send( channel == ctx.channel.id )
 
 @bot.command(name='ping')
 async def ping(ctx):
