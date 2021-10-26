@@ -50,7 +50,7 @@ async def AddIPAddress(ctx, *args):
     :: Adds an string of text to the ipaddress file.
     '''
 
-    channel = client.get_channel(channel_id)
+    channel = ctx.channel.id
     ipAddress = ' '.join(args)
 
     if channel == seceretChannel:
@@ -67,8 +67,8 @@ async def ShowIPAddresses(ctx):
     '''
     :: View items in the wish list
     '''
-    channel = client.get_channel(channel_id)
-    
+    channel = ctx.channel.id
+
     if channel == seceretChannel:
         ip_addresses = return_csv_as_list(ip_file)
         for ipaddress in ip_addresses:
