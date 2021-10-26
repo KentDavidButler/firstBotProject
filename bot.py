@@ -53,7 +53,7 @@ async def AddIPAddress(ctx, *args):
     channel = ctx.channel.id
     ipAddress = ' '.join(args)
 
-    if channel == seceretChannel:
+    if channel == int(seceretChannel):
         success = append_list_as_row(ip_file,(ipAddress))
         if (success==0):
             await ctx.channel.send(f"The following was added to IP Address list: {ipAddress}")
@@ -76,8 +76,7 @@ async def ShowIPAddresses(ctx):
 
         await ctx.channel.send(f"End of list")
     else:
-        await ctx.channel.send(f'Cannot use command here: Channel ID{type(channel)} and {type(seceretChannel)}')
-        await ctx.channel.send( channel == ctx.channel.id )
+        await ctx.channel.send('Cannot use command here')
 
 @bot.command(name='ping')
 async def ping(ctx):
