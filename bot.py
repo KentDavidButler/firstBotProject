@@ -60,7 +60,7 @@ async def AddIPAddress(ctx, *args):
         else:
             await ctx.channel.send(f"An Error occured adding to IP Address list")
     else:
-        await ctx.channel.send('Cannot use command here, ' + message.author)
+        await ctx.channel.send('Cannot use command here')
 
 @bot.command(name='ShowIPAddresses')
 async def ShowIPAddresses(ctx):
@@ -76,7 +76,7 @@ async def ShowIPAddresses(ctx):
 
         await ctx.channel.send(f"End of list")
     else:
-        await ctx.channel.send('Cannot use command here, ' + message.author)
+        await ctx.channel.send('Cannot use command here')
 
 @bot.command(name='ping')
 async def ping(ctx):
