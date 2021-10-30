@@ -4,7 +4,6 @@ import os
 from azure.cli.core import get_default_cli
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 SUB_ID = os.getenv('AZURE_SUBSCRIPTION_ID')
